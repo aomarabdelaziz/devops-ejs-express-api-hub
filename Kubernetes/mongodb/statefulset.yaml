@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: mongodb
-  replicas: 3
+  replicas: 0
   template:
     metadata:
       labels:
@@ -30,8 +30,9 @@ spec:
             - containerPort: 27017
               name: mongo-port
           volumeMounts:
-            - mountPath: /data
-              name: data
+            - mountPath: /data/db
+              name: mongo-data
       volumes:
-        - name: data
-          emptyDir: {}
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-db-pvc
