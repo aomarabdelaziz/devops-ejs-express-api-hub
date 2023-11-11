@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  app:
+    container_name: ejs-express
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3001
+      WEATHER_API_KEY: "eebaaa149db3e0efc42616003d39910c"
+      TODO_MONGO_CONNSTR: mongodb://admin:admin@mongodb:27017
+      TODO_MONGO_DB: todoDb
+    ports:
+      - "3001:3001"
+    networks:
+      - app
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb:/data/db  
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin   
+    networks:
+      - app
+networks:
+  app:
+   driver: bridge
