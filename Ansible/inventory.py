@@ -3,7 +3,7 @@ import json
 import boto3
 
 def fetch_ec2_instances():
-    ec2 = boto3.client('ec2', region_name='us-east-1')  # Specify your desired AWS region
+    ec2 = boto3.client('ec2', region_name='us-east-1')  
 
     # Filter instances based on tags
     filters = [
