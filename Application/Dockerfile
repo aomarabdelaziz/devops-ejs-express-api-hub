@@ -11,6 +11,6 @@ RUN npm install --production --silent
 
 COPY . ./
 
-EXPOSE 3001
+EXPOSE 3000
 
 ENTRYPOINT [ "npm" , "start" ]

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      PORT: 3001
+      PORT: 3000
       WEATHER_API_KEY: "eebaaa149db3e0efc42616003d39910c"
       TODO_MONGO_CONNSTR: mongodb://admin:admin@mongodb:27017
       TODO_MONGO_DB: todoDb

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-express-deployment
+  labels:
+    app: web-express
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: web-express
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: web-express
+    spec:
+      containers:
+        - image: abdelazizomar/ejs-api-hub:1
+          name: web-express-container
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ejs-express-configmap
+                  key: PORT
+            - name: TODO_MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: ejs-express-configmap
+                  key: TODO_MONGO_DB
+            - name: TODO_MONGO_CONNSTR
+              valueFrom:
+                configMapKeyRef:
+                  name: ejs-express-configmap
+                  key: TODO_MONGO_CONNSTR
+            - name: WEATHER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ejs-express-secret
+                  key: WEATHER_API_KEY
+          ports:
+            - containerPort: 3000
+              name: express-port
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          emptyDir: {}
