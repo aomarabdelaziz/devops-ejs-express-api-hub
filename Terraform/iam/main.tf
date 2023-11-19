@@ -9,7 +9,7 @@ resource "aws_iam_role" "master" {
       {
         Effect = "Allow"
         Principal = {
-          Service = ["eks.amazonaws.com", "ec2.amazonaws.com"] # Add "ec2.amazonaws.com" to the list of services
+          Service = ["eks.amazonaws.com", "ec2.amazonaws.com"]
         }
         Action = "sts:AssumeRole"
       }

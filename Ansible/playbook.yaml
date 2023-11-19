@@ -1,0 +1,57 @@
+---
+- name: Installing Docker Playbook
+  hosts: dev_jenkins_server
+  become: true
+  tasks:
+    - name: Update APT repositories and cache on Debian/Ubuntu
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        force_apt_get: yes
+
+    - name: Install Docker
+      package:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker service is enabled
+      systemd:
+        name: docker
+        enabled: yes
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started   
+
+    - name: Add user to the docker group
+      user:
+        name: "ubuntu"
+        groups: docker
+        append: yes
+
+    - name: Change permissions of docker.sock
+      file:
+        path: /var/run/docker.sock
+        mode: "0777"
+
+- name: Run Jenkins as Container
+  hosts: dev_jenkins_server
+  become: true
+  become_user: "ubuntu"
+  tasks:
+    - name: Run Jenkins
+      command: docker run --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -d jenkins/jenkins
+   
+    - name: Extract initialAdminPassword from file
+      shell: cat /var/jenkins_home/secrets/initialAdminPassword
+      register: initial_admin_password
+      
+    - name: Display initial admin password
+      debug:
+        var: initial_admin_password.stdout_lines[0]

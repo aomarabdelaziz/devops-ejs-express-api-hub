@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3.8
 import json
 import boto3
 
@@ -14,6 +14,7 @@ def fetch_ec2_instances():
     instances = ec2.describe_instances(Filters=filters)
     return instances
 
+
 def generate_inventory(instances):
     inventory = {
         "_meta": {
@@ -28,11 +29,14 @@ def generate_inventory(instances):
             public_ip = instance['PublicIpAddress']
 
             instance_name = ''
-
+            ansible_user = ''
             # Extract the Name tag if it exists
             for tag in instance['Tags']:
                 if tag['Key'] == 'Name':
                     instance_name = tag['Value']
+                elif tag['Key'] == 'User':
+                    ansible_user = tag['Value']
+
 
             if instance_name:
                 if instance_name not in inventory:
@@ -42,8 +46,8 @@ def generate_inventory(instances):
                     }
                 inventory[instance_name]['hosts'].append(public_ip)
                 inventory["_meta"]["hostvars"][public_ip] = {
-                    "ansible_ssh_user": "ec2-user",  # Modify SSH user as needed
-                    #"ansible_ssh_private_key_file": "/path/to/your/key.pem"  # Modify SSH key file path
+                    "ansible_ssh_user": ansible_user,
+                    # "ansible_ssh_private_key_file": "/path/to/your/key.pem"  # Modify SSH key file path
                 }
     return inventory
 
