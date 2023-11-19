@@ -47,11 +47,12 @@
   tasks:
     - name: Run Jenkins
       command: docker run --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -d jenkins/jenkins
-   
-    - name: Extract initialAdminPassword from file
-      shell: cat /var/jenkins_home/secrets/initialAdminPassword
-      register: initial_admin_password
+      #ignore_errors: true
       
+    - name: Extract initialAdminPassword from container
+      shell: docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+      register: initial_admin_password
+
     - name: Display initial admin password
       debug:
         var: initial_admin_password.stdout_lines[0]
