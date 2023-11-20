@@ -23,7 +23,10 @@ resource "aws_subnet" "az-subnets" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.env_prefix}-subnet-${count.index}"
+    Name                                 = "${var.env_prefix}-subnet-${count.index}",
+    "kubernetes.io/role/elb"             = "1",
+    "kubernetes.io/cluster/demo-cluster" = "owned",
+
   }
 }
 

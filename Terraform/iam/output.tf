@@ -20,8 +20,12 @@ output "AmazonEKS_CNI_Policy" {
 }
 
 
-output "AmazonEC2ContainerRegistryReadOnly" {
-  value = aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly.id
+output "AmazonEC2ContainerRegistryFullAccessWorker" {
+  value = aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryFullAccessWorker.id
+}
+
+output "AmazonEC2ContainerRegistryFullAccessMaster" {
+  value = aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryFullAccessMaster.id
 }
 
 output "iam_master_arn" {

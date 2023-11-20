@@ -11,6 +11,7 @@ resource "aws_eks_cluster" "eks" {
     var.AmazonEKSClusterPolicy,
     var.AmazonEKSServicePolicy,
     var.AmazonEKSVPCResourceController,
+    var.AmazonEC2ContainerRegistryFullAccessMaster
   ]
 
 }
@@ -28,7 +29,7 @@ resource "aws_eks_node_group" "backend" {
     source_security_group_ids = values(aws_security_group.worker_node_sg)[*].id
   }
 
-  labels = tomap({ env = var.env_prefix })
+  labels = tomap({ env = var.env_prefix, name = "backend-worker" }) # Add a label for the worker nodes
 
   scaling_config {
     desired_size = 2
@@ -43,8 +44,13 @@ resource "aws_eks_node_group" "backend" {
   depends_on = [
     var.AmazonEKSWorkerNodePolicy,
     var.AmazonEKS_CNI_Policy,
-    var.AmazonEC2ContainerRegistryReadOnly,
+    var.AmazonEC2ContainerRegistryFullAccessWorker,
   ]
+
+  tags = {
+    Name = "${var.env_prefix}-backend-worker",
+  }
+
 }
 
 resource "aws_security_group" "worker_node_sg" {

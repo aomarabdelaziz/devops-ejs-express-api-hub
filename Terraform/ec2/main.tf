@@ -75,7 +75,7 @@ resource "aws_security_group" "instances_sgs" {
 
 resource "aws_instance" "ansible-ec2-instance" {
   #count                  = length(var.instances)
-  depends_on = [aws_instance.jenkins-ec2-instance]
+  depends_on = [aws_instance.jenkins-ec2-instance, aws_instance.bootstrap-ec2-instance, var.eks_cluster_id]
 
   ami                    = data.aws_ami.latest-amazon-linux-image.id
   instance_type          = var.instance_type
@@ -173,5 +173,47 @@ resource "aws_instance" "jenkins-ec2-instance" {
     Name        = "${var.env_prefix}_jenkins_server",
     Environment = "app-dev"
     User        = "ubuntu"
+  }
+}
+
+
+resource "aws_instance" "bootstrap-ec2-instance" {
+  ami                    = data.aws_ami.latest-amazon-linux-image.id
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instances_sgs["sg1"].id]
+
+  subnet_id = var.subnet_id
+
+  availability_zone = var.avail_zone
+
+  associate_public_ip_address = true
+
+  key_name = var.key-name
+
+  connection {
+    type        = "ssh"
+    host        = self.public_ip
+    user        = "ec2-user"
+    private_key = var.key-pem
+  }
+
+
+  provisioner "file" {
+    source      = "../Ansible/aws_configure.sh"
+    destination = "/home/ec2-user/aws_configure.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 777 /home/ec2-user/aws_configure.sh",
+      "/home/ec2-user/aws_configure.sh"
+
+    ]
+  }
+
+  tags = {
+    Name        = "${var.env_prefix}_bootstrap_server",
+    Environment = "app-dev"
+    User        = "ec2-user"
   }
 }

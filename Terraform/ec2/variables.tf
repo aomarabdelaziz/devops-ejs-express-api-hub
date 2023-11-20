@@ -30,8 +30,13 @@ variable "subnet_id" {
   type = string
 }
 
+variable "eks_cluster_id" {
+  type = string
+}
 
-
+variable "eks_node_group_id" {
+  type = string
+}
 variable "security_groups" {
   type = map(object({
     name        = string

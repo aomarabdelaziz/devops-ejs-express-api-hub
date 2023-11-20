@@ -33,7 +33,11 @@ variable "AmazonEKS_CNI_Policy" {
   type = string
 }
 
-variable "AmazonEC2ContainerRegistryReadOnly" {
+variable "AmazonEC2ContainerRegistryFullAccessWorker" {
+  type = string
+}
+
+variable "AmazonEC2ContainerRegistryFullAccessMaster" {
   type = string
 }
 

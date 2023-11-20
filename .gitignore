@@ -5,3 +5,4 @@
 terraform.tfstate
 terraform.tfstate.backup
 playbook-invoker.sh
+aws_configure.sh

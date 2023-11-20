@@ -47,12 +47,77 @@
   tasks:
     - name: Run Jenkins
       command: docker run --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -d jenkins/jenkins
-      #ignore_errors: true
+      ignore_errors: true
       
     - name: Extract initialAdminPassword from container
       shell: docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
       register: initial_admin_password
+      until: initial_admin_password.rc == 0
+      retries: 6
+      delay: 10
+      ignore_errors: yes
+      failed_when: initial_admin_password.rc != 0 or "No such file or directory" in initial_admin_password.stderr
+
 
     - name: Display initial admin password
       debug:
         var: initial_admin_password.stdout_lines[0]
+
+- name: Configure BootStrap Server - 1
+  hosts: dev_bootstrap_server
+  become_user: ec2-user
+  tasks:
+    - name: Fetch kubeconfig
+      command: "aws eks update-kubeconfig --name demo-cluster --region us-east-1"
+      ignore_errors: yes
+    - name: "Fix error: exec plugin: invalid apiVersion client.authentication.k8s.io/v1alpha1"
+      command: 'sed -i -e "s,client.authentication.k8s.io/v1alpha1,client.authentication.k8s.io/v1beta1,g" ~/.kube/config'
+      
+- name: Configure BootStrap Server - 2
+  hosts: dev_bootstrap_server
+  become: true
+  tasks:
+    - name: Download AWS CLI Updated Version
+      unarchive:
+        src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /opt
+        remote_src: true
+
+    - name: Install AWS CLI
+      command: "/opt/aws/install"
+      register: aws_cli
+      ignore_errors: yes
+
+    - name: Download & Setup Kubectl
+      get_url:
+        url: "https://dl.k8s.io/release/v1.26.1/bin/linux/amd64/kubectl"
+        dest: "/usr/local/bin/kubectl"
+        mode: "a+x"
+
+    # - name: Check Kubectl
+    #   command: /usr/local/bin/kubectl get po
+    #   register: kubectl_response
+    #   ignore_errors: yes
+
+      # ignore_errors: yes
+      # when: "'exec plugin: invalid apiVersion client.authentication.k8s.io/v1alpha1' in kubectl_response.stdout"
+
+
+    - name: Install helm if not exists
+      unarchive:
+        src: https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
+        dest: /opt
+        mode: "a+x"
+        remote_src: true
+      args:
+        creates: /usr/local/bin/helm
+    - name: Move Helm binary to /usr/local/bin
+      command: "mv /opt/linux-amd64/helm /usr/local/bin/"
+      args:
+        creates: /usr/local/bin/helm
+    - name: Print helm version
+      command: "/usr/local/bin/helm version"
+      register: helm_version
+    - name: Display helm version
+      debug:
+        var: helm_version.stdout_lines

@@ -32,13 +32,14 @@ module "eks" {
   }
 
 
-  AmazonEKSClusterPolicy             = module.iam-module.AmazonEKSClusterPolicy
-  AmazonEKSServicePolicy             = module.iam-module.AmazonEKSServicePolicy
-  AmazonEKSVPCResourceController     = module.iam-module.AmazonEKSVPCResourceController
-  AmazonEKSWorkerNodePolicy          = module.iam-module.AmazonEKSWorkerNodePolicy
-  AmazonEKS_CNI_Policy               = module.iam-module.AmazonEKS_CNI_Policy
-  AmazonEC2ContainerRegistryReadOnly = module.iam-module.AmazonEC2ContainerRegistryReadOnly
-  iam_master_arn                     = module.iam-module.iam_master_arn
+  AmazonEKSClusterPolicy                     = module.iam-module.AmazonEKSClusterPolicy
+  AmazonEKSServicePolicy                     = module.iam-module.AmazonEKSServicePolicy
+  AmazonEKSVPCResourceController             = module.iam-module.AmazonEKSVPCResourceController
+  AmazonEKSWorkerNodePolicy                  = module.iam-module.AmazonEKSWorkerNodePolicy
+  AmazonEKS_CNI_Policy                       = module.iam-module.AmazonEKS_CNI_Policy
+  AmazonEC2ContainerRegistryFullAccessMaster = module.iam-module.AmazonEC2ContainerRegistryFullAccessMaster
+  AmazonEC2ContainerRegistryFullAccessWorker = module.iam-module.AmazonEC2ContainerRegistryFullAccessWorker
+  iam_master_arn                             = module.iam-module.iam_master_arn
 
 
 }
