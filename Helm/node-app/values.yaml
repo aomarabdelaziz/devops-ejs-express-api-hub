@@ -43,3 +43,12 @@ mongo:
    persistentVolumeReclaimPolicy: Retain
    hostPath:
     path: /data
+
+
+awsLoadBalancer:
+  namespace: kube-system
+  serviceAccountName: aws-load-balancer-controller
+  eksRoleName: arn:aws:iam::175437784856:role/loadbalancer-controller-role
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/name: aws-load-balancer-controller

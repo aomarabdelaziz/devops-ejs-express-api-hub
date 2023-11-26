@@ -40,6 +40,4 @@ module "eks" {
   AmazonEC2ContainerRegistryFullAccessMaster = module.iam-module.AmazonEC2ContainerRegistryFullAccessMaster
   AmazonEC2ContainerRegistryFullAccessWorker = module.iam-module.AmazonEC2ContainerRegistryFullAccessWorker
   iam_master_arn                             = module.iam-module.iam_master_arn
-
-
 }

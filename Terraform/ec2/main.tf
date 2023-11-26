@@ -75,8 +75,12 @@ resource "aws_security_group" "instances_sgs" {
 
 resource "aws_instance" "ansible-ec2-instance" {
   #count                  = length(var.instances)
-  depends_on = [aws_instance.jenkins-ec2-instance, aws_instance.bootstrap-ec2-instance, var.eks_cluster_id]
-
+  depends_on = [
+    aws_instance.jenkins-ec2-instance,
+    aws_instance.bootstrap-ec2-instance,
+    var.eks_cluster_id,
+    var.s3_objects,
+  ]
   ami                    = data.aws_ami.latest-amazon-linux-image.id
   instance_type          = var.instance_type
   vpc_security_group_ids = values(aws_security_group.instances_sgs)[*].id
@@ -144,7 +148,7 @@ resource "aws_instance" "ansible-ec2-instance" {
       "sudo python3.8 -m pip install -r /home/ec2-user/ansible/requirements.txt",
       "chmod +x /home/ec2-user/ansible/playbook-invoker.sh",
       "chmod +x /home/ec2-user/ansible/inventory.py",
-      "sudo /home/ec2-user/ansible/playbook-invoker.sh"
+      "sudo /home/ec2-user/ansible/playbook-invoker.sh ${var.application-chart-url}"
     ]
   }
 

@@ -27,7 +27,7 @@
     - name: Start Docker service
       systemd:
         name: docker
-        state: started   
+        state: started
 
     - name: Add user to the docker group
       user:
@@ -46,9 +46,9 @@
   become_user: "ubuntu"
   tasks:
     - name: Run Jenkins
-      command: docker run --name jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -d jenkins/jenkins
+      command: docker run --name jenkins -p 8080:8080 -p 50000:50000 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home -d jenkins/jenkins
       ignore_errors: true
-      
+
     - name: Extract initialAdminPassword from container
       shell: docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
       register: initial_admin_password
@@ -57,7 +57,6 @@
       delay: 10
       ignore_errors: yes
       failed_when: initial_admin_password.rc != 0 or "No such file or directory" in initial_admin_password.stderr
-
 
     - name: Display initial admin password
       debug:
@@ -72,7 +71,7 @@
       ignore_errors: yes
     - name: "Fix error: exec plugin: invalid apiVersion client.authentication.k8s.io/v1alpha1"
       command: 'sed -i -e "s,client.authentication.k8s.io/v1alpha1,client.authentication.k8s.io/v1beta1,g" ~/.kube/config'
-      
+
 - name: Configure BootStrap Server - 2
   hosts: dev_bootstrap_server
   become: true
@@ -99,9 +98,8 @@
     #   register: kubectl_response
     #   ignore_errors: yes
 
-      # ignore_errors: yes
-      # when: "'exec plugin: invalid apiVersion client.authentication.k8s.io/v1alpha1' in kubectl_response.stdout"
-
+    # ignore_errors: yes
+    # when: "'exec plugin: invalid apiVersion client.authentication.k8s.io/v1alpha1' in kubectl_response.stdout"
 
     - name: Install helm if not exists
       unarchive:
@@ -121,3 +119,16 @@
     - name: Display helm version
       debug:
         var: helm_version.stdout_lines
+
+    - name: Add aws-load-balancer-controller-eks repo
+      command: "helm repo add eks https://aws.github.io/eks-charts"
+      ignore_errors: yes
+
+    - name: Install aws-load-balancer-controller (Operator)
+      command: "helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=demo-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller"
+      ignore_errors: yes
+
+    - name: Install Application Helm-Charts
+      debug:
+        msg: "helm install application {{ application_chart_url }}"
+      ignore_errors: yes

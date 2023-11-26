@@ -55,3 +55,12 @@ variable "security_groups" {
     }))
   }))
 }
+
+
+variable "application-chart-url" {
+  type = string
+}
+
+variable "s3_objects" {
+  type = list(string)
+}
