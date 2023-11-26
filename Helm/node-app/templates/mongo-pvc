@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Release.Name }}-mongo-pvc"
+spec:
+  storageClassName: {{ .Values.mongo.pv_pvc.storageClassName }}
+  accessModes:
+  {{- range .Values.mongo.pv_pvc.accessModes }}
+  - {{ . }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.mongo.pv_pvc.capacity.storage }}

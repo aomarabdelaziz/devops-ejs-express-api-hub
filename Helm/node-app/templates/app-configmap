@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-configmap"
+data:
+  PORT: "3000"
+  TODO_MONGO_DB: todoDb
+  TODO_MONGO_CONNSTR: "mongodb://admin:admin@{{ .Release.Name }}-mongo-service.default.svc.cluster.local"

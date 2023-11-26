@@ -1,0 +1,46 @@
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-deployment"
+  labels:
+    app: "{{ .Release.Name }}-deployment"
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.app.selectorName }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.app.selectorName }}
+    spec:
+      containers:
+        - name: web-express-container
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          env:
+{{- range .Values.app.env }}
+            - name: {{ .name }}
+              {{- if .configMapKey }}
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ $.Release.Name }}-configmap"
+                  key: {{ .configMapKey }}
+              {{- else if .secretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $.Release.Name }}-secret"
+                  key: {{ .secretKey }}
+              {{- end }}
+{{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}

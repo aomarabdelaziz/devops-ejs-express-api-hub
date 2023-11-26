@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "{{ .Release.Name }}-mongo-stateful"
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.mongo.selectorName }}
+  replicas: {{ .Values.mongo.app.replicasCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mongo.selectorName }}
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-mongodb-container"
+          image: {{ .Values.mongo.app.image }}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-mongo-secret"
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-mongo-secret"
+                  key: MONGO_INITDB_ROOT_PASSWORD
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-data
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: "{{ .Release.Name }}-mongo-pvc"
