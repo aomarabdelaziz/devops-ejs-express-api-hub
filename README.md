@@ -126,6 +126,3 @@ Note: I used this plugin build dynamic agents on the cluster which help me to sa
 ![Alternative Image](./pics/grafana-1.png)
 ![Alternative Image](./pics/grafana-2.png)
 ![Alternative Image](./pics/grafana-3.png)
-
-AKIASRWHIE4MCWH6VWRP
-W0CG+l7A8CmQDBaj2NHDq/YbbJX8vx/mLj8PqGOb
