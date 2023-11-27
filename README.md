@@ -1,6 +1,6 @@
 # DevOps Project README
 
-Hey Folks 🖐️, This repository contains a Nodejs  DevOps project that leverages various technologies, including Terraform, Ansible, Docker, EKS cluster, Helm, jenkins, prometheus, grafana and kubectl to automate the deployment and management of an application on Amazon EKS.
+Hey Folks 🖐️, This repository contains a Nodejs DevOps project that leverages various technologies, including Terraform, Ansible, Docker, EKS cluster, Helm, jenkins, prometheus, grafana and kubectl to automate the deployment and management of an application on Amazon EKS.
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -65,13 +65,6 @@ Note: this guide assumes that you have a basic understanding of Docker, Terrafor
 
 - Note: You Will find that the kubectl already installed using script created by ansible. no need to install it manually
 - Note: You Will find that the ingress controller and prometheus-grafana stack already installed using script created by helm. no need to install it manually
-
-2. Install Helm Charts application using shell script run `./install-charts.sh`
-
-3. After installation the helm charts for jenkins and application
-
-- Run this command to get the loadbalancer-ip for application: `kubectl get ingress/<release-name> -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n <release-namespace>`
-- Run this command to get the loadbalancer-ip for application: `kubectl get ingress/<release-name> -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' -n default`
 
 ## Pictures
 
