@@ -87,7 +87,7 @@ Note: this guide assumes that you have a basic understanding of Docker, Terrafor
 ### Jenkins Clouds (Kubernetes)
 Note: I used this plugin build dynamic agents on the cluster which help me to save costs
 
-![Alternative Image](./pics/jenk-3.png)
+
 
 ### Jenkins Ocean Blue (Plugin)
 
