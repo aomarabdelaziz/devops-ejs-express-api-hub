@@ -25,8 +25,8 @@ Helm is utilized to package the application, and the Helm charts are uploaded to
 
 ## Project Design
 
-![Alternative Image](./assets/design-1.png)
-![Alternative Image](./assets/design-2.png)
+![Alternative Image](./assets/architecture.png)
+#![Alternative Image](./assets/design-2.png)
 
 ## Tools
 
