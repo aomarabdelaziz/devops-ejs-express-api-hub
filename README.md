@@ -4,7 +4,7 @@ Hey Folks 🖐️, This repository contains a Nodejs DevOps project that leverag
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Project Design](#project-design)
+2. [Project Architecture](#project-architecture)
 3. [Tools](#tools)
 4. [Prerequisites](#prerequisites)
 5. [Installation Guide](#installation-guide)
@@ -23,7 +23,7 @@ In this project, Terraform is used to provision infrastructure, including 3 EC2 
 
 Helm is utilized to package the application, and the Helm charts are uploaded to an S3 bucket using Terraform.
 
-## Project Design
+## Project Architecture
 
 ![Alternative Image](./pics/architecture.png)
 
