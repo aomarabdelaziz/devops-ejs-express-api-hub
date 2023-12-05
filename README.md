@@ -17,7 +17,7 @@ This DevOps project aims to automate the provisioning, deployment, and managemen
 
 In this project, Terraform is used to provision infrastructure, including 3 EC2 instances:
 
-- **bootstrap-server**: Used to install kubectl and eksctl, and build the EKS cluster.
+- **bootstrap-server**: Used to install kubectl.
 - **ansible-server**: Utilized for necessary configuration on the target hosts.
 - **jenkins-master**: Employed to run Jenkins build jobs.
 
