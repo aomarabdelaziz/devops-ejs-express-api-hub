@@ -13,7 +13,7 @@ Hey Folks 🖐️, This repository contains a Nodejs DevOps project that leverag
 
 ## Introduction
 
-This DevOps project aims to automate the provisioning, deployment, and management of node js applications on an Amazon EKS cluster using Terraform for infrastructure provisioning, Ansible for configuration management, Docker for containerization, terraform for EKS cluster creation, kubectl for Kubernetes cluster management, Helm for package management, prometheus for monitoring cluster, grafana for visualization,  and Jenkins for continuous integration and continuous deployment (CI/CD).
+This DevOps project aims to automate the provisioning, deployment, and management of node js applications on an Amazon EKS cluster using Terraform for infrastructure provisioning, Ansible for configuration management and Dynamic Inventory, Docker for containerization, terraform for EKS cluster creation, kubectl for Kubernetes cluster management, Helm for package management, prometheus for monitoring cluster, grafana for visualization,  and Jenkins for continuous integration and continuous deployment (CI/CD).
 
 In this project, Terraform is used to provision infrastructure, including 3 EC2 instances:
 
